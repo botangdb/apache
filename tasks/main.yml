@@ -1,0 +1,35 @@
+---
+# tasks file for apache
+- name: Install httpd
+  yum:
+    name: httpd
+    state: present
+
+- name: Website Webconect
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: apache
+    group: apache
+    setype: httpd_sys_content_t
+
+- name: Start httpd and on Enable it
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: Start firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: Config firewalld
+  firewalld:
+    service: http
+    state: enabled
+    permanent: yes
+    immediate: yes
+
+
